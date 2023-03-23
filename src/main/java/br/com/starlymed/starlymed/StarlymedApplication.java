@@ -1,8 +1,10 @@
 package br.com.starlymed.starlymed;
 
 import br.com.starlymed.starlymed.especialidade.Especialidade;
+import br.com.starlymed.starlymed.orm.Clinica;
 import br.com.starlymed.starlymed.orm.Endereco;
 import br.com.starlymed.starlymed.orm.Medico;
+import br.com.starlymed.starlymed.service.ClinicaService;
 import br.com.starlymed.starlymed.service.EnderecoService;
 import br.com.starlymed.starlymed.service.MedicoService;
 import org.springframework.boot.CommandLineRunner;
@@ -19,9 +21,12 @@ public class StarlymedApplication implements CommandLineRunner {
 	private EnderecoService enderecoService;
 	private MedicoService medicoService;
 
-	public StarlymedApplication(EnderecoService enderecoService, MedicoService medicoService){
+	private ClinicaService clinicaService;
+
+	public StarlymedApplication(EnderecoService enderecoService, MedicoService medicoService, ClinicaService clinicaService){
 		this.enderecoService = enderecoService;
 		this.medicoService = medicoService;
+		this.clinicaService = clinicaService;
 	}
 
 	public static void main(String[] args) {
@@ -32,6 +37,7 @@ public class StarlymedApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println("Digite 1 para interagir com endereco");
 		System.out.println("Digite 2 para para interagir com médico");
+		System.out.println("Digite 3 para interagir com a clínica");
 		Scanner scanner = new Scanner(System.in);
 		int opcao = scanner.nextInt();
 		while(opcao != 0){
@@ -74,6 +80,33 @@ public class StarlymedApplication implements CommandLineRunner {
 			}
 
 
+		}
+		if(opcao == 3){
+			System.out.println("Digite o nome da clínica");
+			String nome = scanner.next();
+			Clinica clinica = new Clinica();
+			clinica.setNome(nome);
+			System.out.println("Digite o id do endereco");
+			Long id = scanner.nextLong();
+			Optional<Endereco> enderecoById = enderecoService.getEnderecoById(id);
+			Endereco endereco = null;
+			if(enderecoById.isPresent()){
+				endereco = enderecoById.get();
+				clinica.setEndereco(endereco);
+			}
+
+			System.out.println("Digite o id do médico: ");
+			Long idMedico = scanner.nextLong();
+			Medico medicoById = medicoService.getMedicoById(id);
+			Medico medico = medicoById;
+			clinica.setMedico(medico);
+
+			clinicaService.cadastra(clinica);
+			System.out.println("Clinica cadastrada com sucesso");
+			opcao = 0;
+		}
+		if(opcao == 0){
+			run();
 		}
 	}}
 
