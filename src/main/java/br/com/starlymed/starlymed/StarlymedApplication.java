@@ -155,10 +155,7 @@ public class StarlymedApplication implements CommandLineRunner {
 		int opcao = scanner.nextInt();
 		switch (opcao){
 			case 1:
-				System.out.println("Digite seu nome completo");
-				String nome = scanner.next();
-				medico.setNome(nome);
-				medicoService.atualiza(medico);
+				atualizacaoMedico(scanner, medico);
 				break;
 			case 2:
 				atualizaEnderecoMedico(scanner, medico);
@@ -167,6 +164,13 @@ public class StarlymedApplication implements CommandLineRunner {
 
 		}
 
+	}
+
+	private void atualizacaoMedico(Scanner scanner, Medico medico) {
+		System.out.println("Digite seu nome completo");
+		String nome = scanner.next();
+		medico.setNome(nome);
+		medicoService.atualiza(medico);
 	}
 
 	//para este método, precisamos trazer o endereco, porque se apenas setar o id, ele vai setar todos os outros campos como null
